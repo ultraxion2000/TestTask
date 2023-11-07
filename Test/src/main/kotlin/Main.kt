@@ -1,13 +1,14 @@
 import kotlinx.coroutines.*
 
 
-suspend fun main()= coroutineScope{
+suspend fun main(args: Array<String>)= coroutineScope{
 
     launch{ Work1()}
 
     val exit: Job = launch{ Work2() }
 
-    async{Work3(exit) }
+    launch { Work3(exit) }
+
 
 
     Unit
@@ -30,10 +31,9 @@ suspend fun Work2() {
 suspend fun Work3(exit: Job) {
     repeat(Int.MAX_VALUE) {
         delay(300010L)
-
         println("Продолжить выполнение Work2 y/n ?: ")
-        var age:String? = null
-        while(age !== "y" || age !== "n" ) {
+        var age: String? = null
+        while (age !== "y" || age !== "n") {
             val age = readLine()
             if (age == "n") {
                 exit.cancel()    // отменяем корутину
@@ -42,8 +42,7 @@ suspend fun Work3(exit: Job) {
 
             } else if (age == "y") {
                 exit.start()
-            }
-            else{
+            } else {
                 println("Некорректный ввод")
             }
         }
